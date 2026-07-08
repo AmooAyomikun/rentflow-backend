@@ -2,34 +2,27 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Tenant
+from .serializers import TenantSerialzer
 
 class TenantListView(APIView):
     def get(self, request):
         tenants = Tenant.objects.all()
-        tenant_list = []
-        for tenant in tenants:
-            tenant_list.append({
-                'id': tenant.id,
-                'name': tenant.name,
-                'email': tenant.email,
-                'phone': tenant.phone
-            })
+        serializer = TenantSerialzer(tenants, many=True)
         return Response({
             'success': True,
             'message': 'Tenants retrieved',
-            'data': tenant_list
+            'data': serializer.data
         })
 
     def post(self, request):
-        name = request.data.get('name')
-        email = request.data.get('email')
-        phone = request.data.get('phone')
-
-        tenant = Tenant.objects.create(
-            name=name,
-            email=email,
-            phone=phone
-        )
+        serializer = TenantSerialzer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                'success': True,
+                'message': 'Tenant created successfully',
+                'data': serializer.data
+            }, status=status.HTTP_201_CREATED)
 
         return Response({
             'success': True,
