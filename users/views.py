@@ -3,8 +3,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Tenant
 from .serializers import TenantSerialzer
+from rest_framework.permissions import IsAuthenticated
 
 class TenantListView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         tenants = Tenant.objects.all()
         serializer = TenantSerialzer(tenants, many=True)
