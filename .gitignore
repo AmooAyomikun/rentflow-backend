@@ -1,0 +1,13 @@
+# Secrets and environment variables
+.env
+
+# Python compilation and cache files
+__pycache__/
+*.pyc
+
+# Local development database (if using SQLite)
+db.sqlite3
+
+# OS generated files
+.DS_Store
+Thumbs.db
